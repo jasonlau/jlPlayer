@@ -3,7 +3,7 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.0
+    ©2012 JasonLau.biz - Version 1.0.1
     http://jasonlau.biz/home/jlplayer
     ==================================================================
     This program is free software: you can redistribute it and/or modify
@@ -116,7 +116,7 @@
              hide_song_info: true,
              
              /* Default CSS classes for objects and states. */
-             class_player_wrapper: 'ui-widget-content ui-corner-all',
+             class_player_wrapper: '',
              class_active_song: 'ui-state-highlight ui-corner-all',
              class_inactive_song: 'ui-state-default ui-corner-all',
              class_song_hover: 'ui-state-hover ui-corner-all',
@@ -340,7 +340,7 @@
                if(option.hide_song_info){
                 $('.' + option.player_id + '-songlist p').css({'display':'none'});
                 $('.' + option.player_id + '-song').hover(function(){
-                    $(this).find('p').show('slow');
+                    $(this).find('p').clearQueue().stop().show('slow');
                 },function(){
                     $(this).find('p').hide('slow');
                 });

@@ -7,8 +7,9 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.0
+    ©2012 JasonLau.biz - Version 1.0.1
     http://jasonlau.biz/home/jlplayer
+    https://github.com/jasonlau/jlPlayer
     ==================================================================
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +28,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 	<meta name="author" content="JasonLau.biz" />
 
-	<title>jlPlayer Demo</title>
+	<title>jlPlayer Demo - JasonLau.biz</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
@@ -69,7 +70,7 @@
              hide_song_info: true,
              
              /* Default CSS classes for objects and states. */
-             class_player_wrapper: 'ui-widget-content ui-corner-all',
+             class_player_wrapper: '',
              class_active_song: 'ui-state-highlight ui-corner-all',
              class_inactive_song: 'ui-state-default ui-corner-all',
              class_song_hover: 'ui-state-hover ui-corner-all',
@@ -167,6 +168,13 @@ a{
 </head>
 <body>
   <ul class="playlist">
+    
+    <li>
+    <h3>Ocean</h3>
+    <p>A short test track.<br />
+    <small>&copy;Jason Lau</small></p>   
+    <a href="audio/ocean.ogg">ogg</a> <a href="audio/ocean.mp3">mp3</a>
+    </li>
     
     <li>
     <h3>Jason Lau - Gone</h3>
@@ -272,14 +280,6 @@ I don't care when or why cause I know that when I try I'm gonna fly.<br /><br />
     <small>&copy;Jason Lau</small></p>
     
     <a href="audio/JasonLau.biz - No Way.ogg">ogg</a> <a href="audio/JasonLau.biz - No Way.mp3">mp3</a>
-    </li>
-    
-    <li>
-    <h3>Ocean</h3>
-    <p>A short test track.<br />
-    <small>&copy;Jason Lau</small></p>
-    
-    <a href="audio/ocean.ogg">ogg</a> <a href="audio/ocean.mp3">mp3</a>
     </li>
     
   </ul>
