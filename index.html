@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<!--
+
+    jlPlayer - A jQuery plugin
+    Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
+    ==================================================================
+    ©2012 JasonLau.biz - Version 1.0.0
+    http://jasonlau.biz/home/jlplayer
+    ==================================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+	<meta name="author" content="JasonLau.biz" />
+
+	<title>jlPlayer Demo</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="jlplayer.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function($){
+        $(".playlist").jlplayer({
+             /* Default volume */
+             volume: 100,
+             
+             /* Start playing when the player loads. */ 
+             auto_start: false,
+             
+             /* Continuous play. Replay the playlist when it completes. */ 
+             loop: false,
+             
+             /* Shuffle the playlist items when the player loads. */
+             shuffle: false,
+             
+             /* Automatically advance to the next playlist item. */
+             auto_advance: true,
+             
+             /* Display the volume controls. */
+             volume_control: true,
+             
+             /* Display the progress bar. */
+             progress_bar: true,
+             
+             /* Display the >> button. */
+             button_next: true,
+             
+             /* Display the << button. */
+             button_prev: true,
+             
+             /* Display the songlist */
+             song_list: true,
+             
+             /* Hides the song info until the song is selected. */
+             hide_song_info: true,
+             
+             /* Default CSS classes for objects and states. */
+             class_player_wrapper: 'ui-widget-content ui-corner-all',
+             class_active_song: 'ui-state-highlight ui-corner-all',
+             class_inactive_song: 'ui-state-default ui-corner-all',
+             class_song_hover: 'ui-state-hover ui-corner-all',
+             class_play_button: 'ui-state-default ui-corner-all',
+             class_next_button: 'ui-state-default ui-corner-all',
+             class_prev_button: 'ui-state-default ui-corner-all',
+             class_progress_range: 'ui-state-error ui-corner-all',
+             class_progress_bar: 'ui-state-highlight ui-corner-all',
+             class_progress_handle: 'ui-state-default',
+             class_volume_range: 'ui-state-default ui-corner-all',
+             class_volume_bar: 'ui-widget-content ui-corner-all',
+             class_volume_handle: 'ui-state-default',
+             class_song_list: 'ui-widget-content ui-corner-all',
+             class_song_info: 'ui-widget-content ui-corner-all',            
+             
+             /* Display a link for each source in the song list. */
+             display_source_links: true,
+             
+             /* Effect to use when the player is initially displayed. */
+             /*  blind, bounce, clip, drop, explode, fold, highlight, puff, pulsate, scale, shake, size, slide */
+             show_effect: 'fade',
+             
+             /* Options for this effect. Refer to jQuery UI documentation. http://jqueryui.com/effect/#default */
+             effect_options: {},
+             
+             /* Effect duration. */
+             show_duration: 1000,
+             
+             /* A callback function to run when the player first loads. */
+             is_loaded: function(){ try{ console.log('Player is ready.'); }catch(e){} },
+             
+             /* Keep it unique! */
+             player_id: 'jlplayer' 
+        });
+    });
+    </script>
+    <style type="text/css">
+<!--
+a{
+    border-bottom: 1px dashed;
+}
+
+.jlplayer-wrapper{
+    width: 400px;
+    margin: 0px auto 0px auto;
+    position: relative;
+}
+
+.jlplayer-button{
+    position: absolute;
+    top: 0px;
+    width: 19px;
+    height: 19px;
+    padding: 2px 0px 0px 2px 
+}
+
+.jlplayer-prevbutton{      
+   left: 0px;  
+}
+
+.jlplayer-playpausebutton{
+    left: 23px;
+}
+
+.jlplayer-nextbutton{
+   left: 46px;
+}
+
+.jlplayer-progressbar{
+    position: absolute;
+    top: 4px;
+    left: 79px;
+    width: 190px;   
+}
+
+.jlplayer-volumebar{
+    position: absolute;
+    top: 4px;
+    left: 288px;
+    width: 100px;
+}
+
+.jlplayer-songlist{
+    position: absolute;
+    top: 30px;
+    width: 400px;
+}
+
+.jlplayer-song{
+    padding: 0px 20px 10px 20px;
+}
+	
+-->
+</style>
+</head>
+<body>
+  <ul class="playlist">
+    
+    <li>
+    <h3>Jason Lau - Gone</h3>
+    <p>A song I made on my four-track tape recorder.<br /><br />
+    Over the hill - answers to questions<br />
+over the hill - peace of mind<br />
+scaled to the edge without a reason<br />
+hit the bottom to break the fall<br />
+I'm gone<br />
+don't ever think I'm coming home<br />
+<br />
+Under the cloud there is protection<br />
+behind the shade there is a soul<br />
+ran from the edge without a reason<br />
+no angel wings to break the fall<br />
+I'm gone<br />
+don't ever think I'm coming home<br />
+<br />
+Under the rain there is a river<br />
+beside the stream there is stone<br />
+ran off the edge without a reason<br />
+No one to come and break the fall<br />
+I'm gone<br />
+never think I'm coming home<br /><br />
+<small>&copy;Jason Lau</small>
+    </p>
+    
+    <a href="audio/JasonLau.biz - Gone.ogg">ogg</a> <a href="audio/JasonLau.biz - Gone.mp3">mp3</a>
+    </li>
+    
+    <li>
+    <h3>Jason Lau - Dee</h3>
+    <p>A song I made on my four-track tape recorder.<br /><br />
+    <small>&copy;Jason Lau</small></p>
+    
+    <a href="audio/JasonLau.biz - Dee.ogg">ogg</a> <a href="audio/JasonLau.biz - Dee.mp3">mp3</a>
+    </li>
+    
+    <li>
+    <h3>Jason Lau - Life 101</h3>
+    <p>When life deals you lemons, make a song. A song I made on my four-track tape recorder.<br /><br />
+    Add the minutes that pass away<br />
+blending into hours then to days<br />
+hope for a moment when you say<br />
+I still want you<br /> <br />
+All the things that caused us pain<br />
+all the walls were built in our way<br />
+I thought we could run away<br />
+that just hurt you<br /><br />
+Does it matter what's to say?<br />
+Does it matter who's to blame?<br />
+guess I'm really trying to say<br />
+...I still love you.<br /><br />
+Measure distance of empty space<br />
+miles to hours then to days<br />
+I'd run forever just to say<br />
+...I still want you<br /><br />
+Does it matter what's to say?<br />
+Does it matter who's to blame?<br />
+guess I'm really trying to say<br />
+...I still love you.<br /><br />
+    <small>&copy;Jason Lau</small></p>
+    
+    <a href="audio/JasonLau.biz - Life 101.ogg">ogg</a> <a href="audio/JasonLau.biz - Life 101.mp3">mp3</a>
+    </li>
+	
+    <li>
+    <h3>Jason Lau - Me Again</h3>
+    <p>A song I made on my four-track tape recorder.<br /><br />
+    <dl>
+	<small>&copy;Jason Lau</small>
+</dl></p>
+    
+    <a href="audio/JasonLau.biz - Me Again.ogg">ogg</a> <a href="audio/JasonLau.biz - Me Again.mp3">mp3</a>
+    </li>
+    
+    <li>
+    <h3>Jason Lau - No Way</h3>
+    <p>A song I made on my four-track tape recorder.<br />
+    Drop your bomb and you'll know you have won.<br />
+See them all burn like paper since there's no where to run to.<br /><br />
+Drop your bomb and maybe it'll burn like the sun.<br />
+See them all burn like pictures but you'll know you have won.<br /><br />
+**<br />
+Friends come and friends go<br />
+the ones that stay I guess you should know<br />
+they'll be there until the end<br />
+You can never replace good friends.<br />
+**<br /><br />
+So many faces have been turned to ashes<br />
+now there's no way to repay them<br />
+no way to replace them.<br /><br />
+=================<br /><br />
+Gonna die<br />
+Gonna fry when I die<br />
+I don't care when or why cause I know that when I die I'm gonna fry.<br /><br />
+You're gonna cry<br />
+when I say goodbye<br />
+I don't care when or why cause I know when I say goodbye you're gonna cry.<br /><br />
+Gonna try<br />
+Gonna fly when I try<br />
+I don't care when or why cause I know that when I try I'm gonna fly.<br /><br />
+    <small>&copy;Jason Lau</small></p>
+    
+    <a href="audio/JasonLau.biz - No Way.ogg">ogg</a> <a href="audio/JasonLau.biz - No Way.mp3">mp3</a>
+    </li>
+    
+    <li>
+    <h3>Ocean</h3>
+    <p>A short test track.<br />
+    <small>&copy;Jason Lau</small></p>
+    
+    <a href="audio/ocean.ogg">ogg</a> <a href="audio/ocean.mp3">mp3</a>
+    </li>
+    
+  </ul>
+</body>  
+</html>
