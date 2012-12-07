@@ -3,8 +3,11 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.1
-    http://jasonlau.biz/home/jlplayer
+    ©2012 JasonLau.biz - Version 1.0.2
+    
+    Documentation: http://jasonlau.biz/home/jlplayer
+    Download: https://github.com/jasonlau/jlPlayer
+    
     ==================================================================
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,44 +38,37 @@
              auto_start: false,
              loop: true,
              shuffle: false,
-             auto_advance: true,
-             class_active_song: 'ui-state-highlight',
-             class_inactive_song: 'ui-state-default',
-             class_song_hover: 'ui-state-hover',
-             class_play_button: 'ui-state-default',
-             class_next_button: 'ui-state-default',
-             class_prev_button: 'ui-state-default',
-             class_progress_range: 'ui-state-error',
-             class_progress_bar: 'ui-state-highlight',
-             class_progress_handle: 'ui-state-default',
-             class_volume_range: 'ui-state-default',
-             class_volume_bar: 'ui-widget-content',
-             class_volume_handle: 'ui-state-default',
-             class_song_list: 'ui-widget-content',
-             class_song_info: 'ui-widget-content',
-             display_source_links: true
+             auto_advance: true
         });
     });
     </script>
     </head>
     <body>
-    <ul class="playlist">
-	<li>
+<!-- BEGIN PLAYLIST -->
+<ul class="playlist">
+  <!-- BEGIN SONG -->
+  <li>
     <h3>{Song Title 1}</h3>
     <p>{Song 1 information/description}</p>
     <a href="{OGG Source URL}">ogg</a> <a href="{MP3 Source URL}">mp3</a>
-    </li>
-	<li>
+  </li>
+  <!-- END SONG -->
+  <!-- BEGIN SONG -->
+  <li>
     <h3>{Song Title 2}</h3>
     <p>{Song 2 information/description}</p>
     <a href="{OGG Source URL}">ogg</a> <a href="{MP3 Source URL}">mp3</a>
-    </li>
-    <li>
+  </li>
+  <!-- END SONG -->
+  <!-- BEGIN SONG -->
+  <li>
     <h3>{Song Title 3}</h3>
     <p>{Song 3 information/description}</p>
     <a href="{OGG Source URL}">ogg</a> <a href="{MP3 Source URL}">mp3</a>
-    </li>
-    </ul>
+  </li>
+  <!-- END SONG -->
+</ul>
+<!-- END PLAYLIST -->
     </body>
     </html>
     
