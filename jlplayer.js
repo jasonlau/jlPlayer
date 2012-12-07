@@ -3,7 +3,7 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.4
+    ©2012 JasonLau.biz - Version 1.0.5
     
     Documentation: http://jasonlau.biz/home/jquery/jlplayer
     Download: https://github.com/jasonlau/jlPlayer
@@ -128,7 +128,7 @@
              hide_song_info: true,
              
              /* Default CSS classes for objects and states. */
-             class_player_wrapper: '',
+             class_player_wrapper: 'ui-widget-content ui-corner-all',
              class_active_song: 'ui-state-highlight ui-corner-all',
              class_inactive_song: 'ui-state-default ui-corner-all',
              class_song_hover: 'ui-state-hover ui-corner-all',
