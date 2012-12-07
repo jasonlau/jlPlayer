@@ -3,9 +3,9 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.2
+    ©2012 JasonLau.biz - Version 1.0.3
     
-    Documentation: http://jasonlau.biz/home/jlplayer
+    Documentation: http://jasonlau.biz/home/jlplayer/index.html
     Download: https://github.com/jasonlau/jlPlayer
     
     ==================================================================
@@ -38,7 +38,22 @@
              auto_start: false,
              loop: true,
              shuffle: false,
-             auto_advance: true
+             auto_advance: true,
+             class_active_song: 'ui-state-highlight',
+             class_inactive_song: 'ui-state-default',
+             class_song_hover: 'ui-state-hover',
+             class_play_button: 'ui-state-default',
+             class_next_button: 'ui-state-default',
+             class_prev_button: 'ui-state-default',
+             class_progress_range: 'ui-state-error',
+             class_progress_bar: 'ui-state-highlight',
+             class_progress_handle: 'ui-state-default',
+             class_volume_range: 'ui-state-default',
+             class_volume_bar: 'ui-widget-content',
+             class_volume_handle: 'ui-state-default',
+             class_song_list: 'ui-widget-content',
+             class_song_info: 'ui-widget-content',
+             display_source_links: true
         });
     });
     </script>
@@ -238,16 +253,13 @@
                                 var _source = $(this),
                                 file_url = _source.attr('href'),
                                 mime_type = 'audio/' + _source.html();
-                                audio_sources += '<source class="' + option.player_id + '" src="' + file_url + '" type="' + mime_type + '" data-parent="' + new_index + '">';                               
+                                /* Add new source links to existing source tags. */
+                                $("source[type='" + mime_type + "']").attr({'src': file_url }).data({'parent': new_index});                               
                             });
                         }
                     });
                     /* Set the global current_index to the new selection. */                   
                     current_index = new_index;
-                    /* Remove the old source tags. */
-                    $('audio.' + option.player_id + '-audio source').remove();
-                    /* Inject the new source tags. */
-                    $('audio.' + option.player_id + '-audio').append(audio_sources);
                     /* Load the new selection. */
                     set_player_state('load');
                 }
