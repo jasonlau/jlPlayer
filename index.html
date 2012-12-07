@@ -73,7 +73,7 @@
              hide_song_info: true,
              
              /* Default CSS classes for objects and states. */
-             class_player_wrapper: '',
+             class_player_wrapper: 'ui-widget-content ui-corner-all',
              class_active_song: 'ui-state-highlight ui-corner-all',
              class_inactive_song: 'ui-state-default ui-corner-all',
              class_song_hover: 'ui-state-hover ui-corner-all',
@@ -118,48 +118,51 @@ a{
 
 .jlplayer-wrapper{
     width: 400px;
+    padding: 10px 10px 10px 10px;
     margin: 0px auto 0px auto;
     position: relative;
 }
 
 .jlplayer-button{
     position: absolute;
-    top: 0px;
+    top: 10px;
     width: 19px;
     height: 19px;
     padding: 2px 0px 0px 2px 
 }
 
 .jlplayer-prevbutton{      
-   left: 0px;  
+   left: 10px;  
 }
 
 .jlplayer-playpausebutton{
-    left: 23px;
+    left: 33px;
 }
 
 .jlplayer-nextbutton{
-   left: 46px;
+   left: 56px;
 }
 
 .jlplayer-progressbar{
     position: absolute;
-    top: 4px;
-    left: 79px;
+    left: 89px;
     width: 190px;   
 }
 
 .jlplayer-volumebar{
-    position: absolute;
-    top: 4px;
-    left: 288px;
+    position: absolute;   
+    left: 298px;
     width: 100px;
 }
 
+.jlplayer-progressbar, .jlplayer-volumebar{
+    top: 14px;
+}
+
 .jlplayer-songlist{
-    position: absolute;
-    top: 30px;
+    position: relative;
     width: 400px;
+    margin: 30px auto 0px auto;
 }
 
 .jlplayer-song{
