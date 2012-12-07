@@ -7,7 +7,7 @@
     
     Documentation: http://jasonlau.biz/home/jquery/jlplayer
     Download: https://github.com/jasonlau/jlPlayer
-    Demo: http://jasonlau.biz/home/jlplayer
+    Demo: http://jasonlau.biz/home/jlplayer-demo
     
     ==================================================================
     This program is free software: you can redistribute it and/or modify
