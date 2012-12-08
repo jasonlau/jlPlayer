@@ -3,7 +3,7 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.5
+    ©2012 JasonLau.biz - Version 1.0.6
     
     Documentation: http://jasonlau.biz/home/jquery/jlplayer
     Download: https://github.com/jasonlau/jlPlayer
@@ -174,9 +174,6 @@
               /* HTML5 audio tag supported. */
               var current_index = 0,
               audio_sources = '',
-              /* jQuery doesn't recognize HTML5 audio methods, so we have to reference the DOM object. */
-              audio_player_dom = document.getElementById('' + option.player_id + '_audio'),
-              audio_player = $('audio.' + option.player_id + '-audio'),
               player_state = '';
               
               /* Shuffle the playlist if shuffle is selected */
@@ -184,8 +181,49 @@
                 songs.sort(function() { return 0.5 - Math.random() });                
               }
               
+              /* Inject the new player HTML. */
+               obj.replaceWith(generate_player_html() + generate_player_html('audio'));
+               
+               /* jQuery doesn't recognize HTML5 audio methods, so we have to reference the DOM object also. */
+               var audio_player_dom = document.getElementById('' + option.player_id + '_audio'),
+               audio_player = $('#' + option.player_id + '_audio'),
+               /* Server must support partial data delivery for seek. */
+               isSeekable = audio_player_dom.seekable && audio_player_dom.seekable.length > 0;
+                 
+               /* Set the progress bar. */
+               progressbar_init();
+               
+               /* Setup the volume control. */
+               volumebar_init();
+               
+               /* Set the initial volume. */
+               set_volume(option.volume);
+               
+                /* Add event listeners for the audio object */
+               add_player_listeners();              
+               
+               /* Set the mouse events for all buttons. */
+               set_mouse_events();
+               
+               /* Insert icons in the sliders handles. */
+               add_slider_handle_icons();
+               
+               /* Add custom classes and cursor styles. */
+               set_player_styles();
+               
+               /* Check options for which objects to hide. */
+               check_visibility_options(); 
+               
+               /* Everything is loaded - show the player. */
+               $('.' + option.player_id + '-wrapper').show(option.show_effect, option.effect_options, option.show_duration, option.is_loaded);
+                
+               /* Start playing if auto_start is selected. */
+               if(option.auto_start){
+                $('.' + option.player_id + '-playpausebutton').trigger('click');
+               }
+              
               /* Set the player state, update play icon data */
-              set_player_state = function(state){
+              function set_player_state(state){
                 var play_icon = $('.' + option.player_id + '-playpausebutton-icon');
                 player_state = state;
                 
@@ -234,10 +272,10 @@
                     set_player_state('pause');
                     break;
                 }
-              },
+              };
               
               /* Load or play a playlist item */
-              play_song = function(new_index){
+              function play_song(new_index){
                 /* Check if the index number has changed. */
                 if(new_index != current_index){
                     /* Yes, the index number has changed. Load the new selection. */
@@ -264,107 +302,31 @@
                     /* Load the new selection. */
                     set_player_state('load');
                 }
+                
                 /* Play the new selection and update the player state. */
                 set_player_state('play');                                                                       
-              },
+              }
               
               /* Update the progress bar. */
-              update_progress = function(){
+              function update_progress(){
                 var dur = audio_player_dom.duration,
                 time = audio_player_dom.currentTime,
                 fraction = time/dur,
                 percent = (isNaN(fraction*100)) ? 0 : (fraction*100),
                 icon = $('.' + option.player_id + '-playpausebutton-icon');
                 $('.' + option.player_id + '-progressbar').slider('value', percent);
-              },
+              }
               
               /* Set the player volume. */
-              set_volume = function(new_value){
+               function set_volume(new_value){
                 var new_volume = new_value/100;
                 audio_player_dom.volume = new_volume;
                 $('.' + option.player_id + '-volumebar').slider('value', new_volume);                
-              },
+              }
               
-              /* Assemble the HTML for the player user interface. */              
-              audio_tag = '<audio id="' + option.player_id + '_audio" class="' + option.player_id + '-audio">',
-                       
-              player_html = '<div class="' + option.player_id + '-wrapper ' + option.class_player_wrapper + '" style="display:none;">'
-              + '<div class="' + option.player_id + '-progressbar"></div>'
-              + '<div class="' + option.player_id + '-button ' + option.player_id + '-playpausebutton ' + option.class_play_button + '" data-mode="play"><div class="' + option.player_id + '-playpausebutton-icon ui-icon ui-icon-play" title="Play"></div></div>'
-              + '<div class="' + option.player_id + '-button ' + option.player_id + '-nextbutton ' + option.class_next_button + '"><div class="ui-icon ui-icon-seek-next" title="Next"></div></div>'
-              + '<div class="' + option.player_id + '-button ' + option.player_id + '-prevbutton ' + option.class_prev_button + '"><div class="ui-icon ui-icon-seek-prev" title="Previous"></div></div>'
-              + '<div class="' + option.player_id + '-volumebar"></div>'
-/*              + '<div class="' + option.player_id + '-songinfo ' + option.class_song_info + '"></div>'*/
-              + '<div class="' + option.player_id + '-songlist ' + option.class_song_list + '">';                 
-              /* Loop through the playlist items and grab the data for each one. */
-              $(songs).each(function(song_index, song){
-                    var $_this = $(this),
-                    title = $_this.find('h3').html(),
-                    info = $_this.find('p').html(),
-                    sources = $_this.find('a');
-                    player_html += '<div class="' + option.player_id + ' ' + option.player_id + '-song ' + option.player_id + '-song-inactive ' + option.player_id + '-song-' + song_index +  ' ' + option.class_inactive_song + '" data-index="' + song_index +  '"><h3>' + title + '</h3><p>' + info + '<br />';
-                    
-                    /* Loop through the sources items and grab the data for each one. */
-                    $(sources).each(function(source_index, value){
-                        var _this = $(this),
-                        mime_type = _this.html(),
-                        selection = (song_index+1);
-                        if(song_index == 0){
-                           audio_tag += '<source class="' + option.player_id + '" src="' + _this.attr('href') + '" type="audio/' + mime_type + '" data-parent="' + selection + '">'; 
-                        }
-                        /* Display direct links to the source files. */
-                        if(option.display_source_links){
-                            player_html += '[<a href="' + _this.attr('href') + '" data-type="' + mime_type + '">' + mime_type + '</a>] ';
-                        }                      
-                    });
-                    
-                    player_html += '</p></div>';                    
-                  });
-               player_html += '</div>';
-               audio_tag += '</audio>';
-               /* Inject the new player HTML. */
-               obj.replaceWith(player_html + audio_tag);
-               
-               /* Check options for which objects to hide. */
-               if(!option.volume_control){
-                $('.' + option.player_id + '-volumebar').css({'display':'none'});
-               }
-                            
-               if(!option.progress_bar){
-                $('.' + option.player_id + '-progressbar').css({'display':'none'});
-               }
-               
-               if(!option.button_next){
-                $('.' + option.player_id + '-nextbutton').css({'display':'none'});
-               }
-               
-               if(!option.button_prev){
-                $('.' + option.player_id + '-prevbutton').css({'display':'none'});
-               }
-               
-               if(!option.song_list){
-                $('.' + option.player_id + '-songlist').css({'display':'none'});
-               }
-               
-               if(option.hide_song_info){
-                $('.' + option.player_id + '-songlist p').css({'display':'none'});
-                $('.' + option.player_id + '-song').hover(function(){
-                    $(this).find('p').clearQueue().stop().show('slow');
-                },function(){
-                    $(this).find('p').hide('slow');
-                });
-               }
-               
-               $('.' + option.player_id + '-wrapper').show(option.show_effect, option.effect_options, option.show_duration, option.is_loaded);
-               
-               /* jQuery doesn't recognize HTML5 audio methods, so we have to reference the DOM object also. */
-               var audio_player_dom = document.getElementById('' + option.player_id + '_audio'),
-               audio_player = $('#' + option.player_id + '_audio'),
-               /* Server must support partial data delivery for seek. */
-               isSeekable = audio_player_dom.seekable && audio_player_dom.seekable.length > 0;             
-               
-               /* Set the progress bar. */
-               $('div.' + option.player_id + '-progressbar').slider({
+              /* Setup the progress bar. */
+              function progressbar_init(){
+                $('div.' + option.player_id + '-progressbar').slider({
                 orientation: "horizontal",
                 range: "min",
                 min: 0,
@@ -400,121 +362,203 @@
                     }                                       
                 }
                 });
+              }
+              
+              function generate_player_html(which){
+                which = (!which) ? 'player' : which;
+                /* Assemble the HTML for the player user interface. */
+                var audio_tag = '<audio id="' + option.player_id + '_audio" class="' + option.player_id + '-audio">',
+                player_html = '<div class="' + option.player_id + '-wrapper ' + option.class_player_wrapper + '" style="display:none;">'
+                + '<div class="' + option.player_id + '-progressbar"></div>'
+                + '<div class="' + option.player_id + '-button ' + option.player_id + '-playpausebutton ' + option.class_play_button + '" data-mode="play"><div class="' + option.player_id + '-playpausebutton-icon ui-icon ui-icon-play" title="Play"></div></div>'
+                + '<div class="' + option.player_id + '-button ' + option.player_id + '-nextbutton ' + option.class_next_button + '"><div class="ui-icon ui-icon-seek-next" title="Next"></div></div>'
+                + '<div class="' + option.player_id + '-button ' + option.player_id + '-prevbutton ' + option.class_prev_button + '"><div class="ui-icon ui-icon-seek-prev" title="Previous"></div></div>'
+                + '<div class="' + option.player_id + '-volumebar"></div>'
+                + '<div class="' + option.player_id + '-songlist ' + option.class_song_list + '">';
                 
-                /* Setup the volume control. */
-               $('.' + option.player_id + '-volumebar').slider({
-                orientation: "horizontal",
-                value: 1,
-                min: 0,
-                max: 1,
-                range: 'min',
-                animate: true,
-                step: .1,
-                /* The user is dragging the handle. */
-                slide: function( event, ui ) {
-                    /* Set the volume for the audio player. */
-                    audio_player_dom.volume = ui.value;
-                    /* Check if the player is muted and update the icon data accordingly. */
-                    if(ui.value <= 0){
-                        $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-off', true);
-                        $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-on', false)
-                        .attr('title','Muted');
-                    } else {
-                        $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-off', false);
-                        $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-on', true)
-                        .attr('title','Volume ' + (ui.value*100) + '%');
+                /* Loop through the playlist items and grab the data for each one. */
+                $(songs).each(function(song_index, song){
+                    var $_this = $(this),
+                    title = $_this.find('h3').html(),
+                    info = $_this.find('p').html(),
+                    sources = $_this.find('a');
+                    player_html += '<div class="' + option.player_id + ' ' + option.player_id + '-song ' + option.player_id + '-song-inactive ' + option.player_id + '-song-' + song_index +  ' ' + option.class_inactive_song + '" data-index="' + song_index +  '"><h3>' + title + '</h3><p>' + info + '<br />';
+                    
+                    /* Loop through the sources items and grab the data for each one. */
+                    $(sources).each(function(source_index, value){
+                        var _this = $(this),
+                        mime_type = _this.html(),
+                        selection = (song_index+1);
+                        if(song_index == 0){
+                           audio_tag += '<source class="' + option.player_id + '" src="' + _this.attr('href') + '" type="audio/' + mime_type + '" data-parent="' + selection + '">'; 
+                        }
+                        /* Display direct links to the source files. */
+                        if(option.display_source_links){
+                            player_html += '[<a href="' + _this.attr('href') + '" data-type="' + mime_type + '">' + mime_type + '</a>] ';
+                        }                      
+                    });
+                    
+                    player_html += '</p></div>';                    
+                  });
+               player_html += '</div>';
+               audio_tag += '</audio>';
+               switch (which){
+                case 'audio':
+                return audio_tag;
+                break;
+                
+                default :
+                return player_html;
+                }
+              }
+              
+              /* Setup the volume control. */
+                function volumebar_init(){
+                    $('.' + option.player_id + '-volumebar').slider({
+                        orientation: "horizontal",
+                        value: 1,
+                        min: 0,
+                        max: 1,
+                        range: 'min',
+                        animate: true,
+                        step: .1,
+                        /* The user is dragging the handle. */
+                        slide: function( event, ui ) {
+                            /* Set the volume for the audio player. */
+                            audio_player_dom.volume = ui.value;
+                            /* Check if the player is muted and update the icon data accordingly. */
+                            if(ui.value <= 0){
+                                $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-off', true);
+                                $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-on', false)
+                                .attr('title','Muted');
+                            } else {
+                                $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-off', false);
+                                $('.' + option.player_id + '-volume-icon').toggleClass('ui-icon-volume-on', true)
+                                .attr('title','Volume ' + (ui.value*100) + '%');
+                            }
+                        }
+                    });
+                }
+                
+                /* Check options for which objects to hide. */
+                function check_visibility_options(){
+                    /* Check options for which objects to hide. */
+                    if(!option.volume_control){
+                        $('.' + option.player_id + '-volumebar').css({'display':'none'});
+                    }
+                    
+                    if(!option.progress_bar){
+                        $('.' + option.player_id + '-progressbar').css({'display':'none'});
+                    }
+                    
+                    if(!option.button_next){
+                        $('.' + option.player_id + '-nextbutton').css({'display':'none'});
+                    }
+                    
+                    if(!option.button_prev){
+                        $('.' + option.player_id + '-prevbutton').css({'display':'none'});
+                    }
+                    
+                    if(!option.song_list){
+                        $('.' + option.player_id + '-songlist').css({'display':'none'});
+                    }
+                    
+                    if(option.hide_song_info){
+                        $('.' + option.player_id + '-songlist p').css({'display':'none'});
+                        $('.' + option.player_id + '-song').hover(function(){
+                            $(this).find('p').clearQueue().stop().show('slow');
+                        },function(){
+                            $(this).find('p').hide('slow');
+                        });
                     }
                 }
-                });
                 
-                /* Insert an icon in the progress bar handle. */
-                $('.' + option.player_id + '-progressbar .ui-slider-handle').append('<div class="ui-icon ui-icon-arrowthick-2-e-w ' + option.player_id + '-progress-icon" style="margin:2px 2px 2px 2px;"></div>');
-                
-                /* Insert an icon in the volume bar handle. */
-               $('.' + option.player_id + '-volumebar .ui-slider-handle').append('<div class="ui-icon ui-icon-volume-on ' + option.player_id + '-volume-icon" title="Volume" style="margin:2px 2px 2px 2px;"></div>');
-               
-               /* Add a listener so we know when the song is over. */
-               audio_player_dom.addEventListener('ended', function() {
-                if(option.auto_advance || option.loop){
-                /* Auto advance is on - go to the next selection by triggering the click even on the >> button */
-                if((current_index >= songs.length-1) && option.loop){
-                   $('.' + option.player_id + '-nextbutton').trigger('click'); 
-                } else if((current_index < (songs.length-1)) && option.auto_advance){
-                    $('.' + option.player_id + '-nextbutton').trigger('click');
-                } else if((current_index >= (songs.length-1)) && option.auto_advance){
-                    set_player_state('idle');
-                } else {
-                /* Auto advance is off - set the progress back to zero and pause the player. */
-                    set_player_state('idle');
+                /* Insert icons in the sliders handles. */
+                function add_slider_handle_icons(){
+                    /* Insert an icon in the progress bar handle. */
+                    $('.' + option.player_id + '-progressbar .ui-slider-handle').append('<div class="ui-icon ui-icon-arrowthick-2-e-w ' + option.player_id + '-progress-icon" style="margin:2px 2px 2px 2px;"></div>');
+                    /* Insert an icon in the volume bar handle. */
+                    $('.' + option.player_id + '-volumebar .ui-slider-handle').append('<div class="ui-icon ui-icon-volume-on ' + option.player_id + '-volume-icon" title="Volume" style="margin:2px 2px 2px 2px;"></div>');
                 }
-                }               
-               });
-               
-               /* 
-                 Add a listener so we know when the song is playing.
-                 This is where the progress bar gets updated.
-               */
-               audio_player_dom.addEventListener('timeupdate', function() {
-                update_progress();                
-               }, false);
-               
-               /* Set the click event for the play button. */
-               $('.' + option.player_id + '-playpausebutton').bind('click',function(){
-                /* Check the global player state and act accordingly. */
-                switch(player_state){
-                    case 'play':                  
-                    set_player_state('pause');
-                    break;
+                
+                function add_player_listeners(){
+                    /* Add a listener so we know when the song is over. */
+                    audio_player_dom.addEventListener('ended', function() {
+                        if(option.auto_advance || option.loop){
+                            /* Auto advance is on - go to the next selection by triggering the click even on the >> button */
+                            if((current_index >= songs.length-1) && option.loop){
+                                $('.' + option.player_id + '-nextbutton').trigger('click');
+                            } else if((current_index < (songs.length-1)) && option.auto_advance){
+                                $('.' + option.player_id + '-nextbutton').trigger('click');
+                            } else if((current_index >= (songs.length-1)) && option.auto_advance){
+                                set_player_state('idle');
+                            } else {
+                                /* Auto advance is off - set the progress back to zero and pause the player. */
+                                set_player_state('idle');
+                            }
+                        }
+                    });
                     
-                    default:
-                    play_song(current_index);
-                    break;
+                    /*
+                    Add a listener so we know when the song is playing.
+                    This is where the progress bar gets updated.
+                    */
+                    audio_player_dom.addEventListener('timeupdate', function() {
+                        update_progress();
+                    }, false);
                 }
-               });
-               
-               /* Set the click event for the >> button. */
-               $('.' + option.player_id + '-nextbutton').bind('click',function(){
-                var i = current_index,
-                next = ((i+1) > songs.length-1) ? 0 : (i+1);
-                //audio_player_dom.pause();
-                play_song(next);               
-               });
-               
-               /* Set the click event for the << button. */
-               $('.' + option.player_id + '-prevbutton').bind('click',function(){
-                var i = current_index,
-                prev = ((i-1) <= 0) ? 0 : (i-1);
-                //audio_player_dom.pause();
-                play_song(prev);
-               });
-               
-               /* Set the mouseover and click events for the playlist items, and the cursor style. */
-               $('.' + option.player_id + '-song').hover(function(){
-                $(this).toggleClass(option.class_song_hover, true);
-               },function(){
-                $(this).toggleClass(option.class_song_hover, false);
-               }).click(function(){
-                var new_index = $(this).data().index;
-                play_song(new_index);
-               }).css({'cursor': 'pointer'});
-               
-               /* Add custom css class options, if they exist, to their respective objects.  */
-               $('.' + option.player_id + '-progressbar').addClass(option.class_progress_bar);
-               $('.' + option.player_id + '-progressbar.ui-slider-range').addClass(option.class_progress_range);
-               $('.' + option.player_id + '-progressbar.ui-slider-handle').addClass(option.class_progress_handle);
-               
-               $('.' + option.player_id + '-volumebar').addClass(option.class_volume_bar);
-               $('.' + option.player_id + '-volumebar.ui-slider-range').addClass(option.class_volume_range);
-               $('.' + option.player_id + '-volumebar.ui-slider-handle').addClass(option.class_volume_handle);
-               
-               /* Set the cursor style. */
-               $('.ui-slider-handle, .' + option.player_id + '-button').css({'cursor':'pointer'});
-               /* Set the initial volume. */
-               set_volume(option.volume);
-               /* Start playing if auto_start is selected. */
-               if(option.auto_start){
-                $('.' + option.player_id + '-playpausebutton').trigger('click');
-               }
+                
+                function set_mouse_events(){
+                    /* Set the click event for the play button. */
+                    $('.' + option.player_id + '-playpausebutton').bind('click',function(){
+                        /* Check the global player state and act accordingly. */
+                        switch(player_state){
+                            case 'play':
+                            set_player_state('pause');
+                            break;
+                            
+                            default:
+                            play_song(current_index);
+                        }
+                    });
+                    
+                    /* Set the click event for the >> button. */
+                    $('.' + option.player_id + '-nextbutton').bind('click',function(){
+                        var i = current_index,
+                        next = ((i+1) > songs.length-1) ? 0 : (i+1);
+                        play_song(next);
+                    });
+                    
+                    /* Set the click event for the << button. */
+                    $('.' + option.player_id + '-prevbutton').bind('click',function(){
+                        var i = current_index,
+                        prev = ((i-1) <= 0) ? 0 : (i-1);
+                        play_song(prev);
+                    });
+                    
+                    /* Set the mouseover and click events for the playlist items, and the cursor style. */
+                    $('.' + option.player_id + '-song').hover(function(){
+                        $(this).toggleClass(option.class_song_hover, true);
+                    },function(){
+                        $(this).toggleClass(option.class_song_hover, false);
+                    }).click(function(){
+                        var new_index = $(this).data().index;
+                        play_song(new_index);
+                    }).css({'cursor': 'pointer'});
+                }
+                
+                function set_player_styles(){
+                    /* Add custom css class options, if they exist, to their respective objects.  */
+                    $('.' + option.player_id + '-progressbar').addClass(option.class_progress_bar);
+                    $('.' + option.player_id + '-progressbar.ui-slider-range').addClass(option.class_progress_range);
+                    $('.' + option.player_id + '-progressbar.ui-slider-handle').addClass(option.class_progress_handle);
+                    $('.' + option.player_id + '-volumebar').addClass(option.class_volume_bar);
+                    $('.' + option.player_id + '-volumebar.ui-slider-range').addClass(option.class_volume_range);
+                    $('.' + option.player_id + '-volumebar.ui-slider-handle').addClass(option.class_volume_handle);
+                    /* Set the cursor style. */
+                     $('.ui-slider-handle, .' + option.player_id + '-button').css({'cursor':'pointer'});
+                }
+                
               } else {
                 /* HTML5 audio tag not supported. We better get outta here! */
                 return;
