@@ -1,7 +1,7 @@
 jlPlayer - HTML5, jQuery, jQuery UI Audio Player
 Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
 ==================================================================
-©2012 JasonLau.biz - Version 1.0.6
+©2012 JasonLau.biz - Version 1.0.7
 
 Documentation: http://jasonlau.biz/home/jquery/jlplayer
 Download: https://github.com/jasonlau/jlPlayer

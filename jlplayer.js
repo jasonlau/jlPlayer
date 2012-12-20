@@ -3,7 +3,7 @@
     jlPlayer - A jQuery plugin
     Requires jQuery 1.8.3+ AND jQuery UI 1.9.1+
     ==================================================================
-    ©2012 JasonLau.biz - Version 1.0.6
+    ©2012 JasonLau.biz - Version 1.0.7
     
     Documentation: http://jasonlau.biz/home/jquery/jlplayer
     Download: https://github.com/jasonlau/jlPlayer
@@ -171,56 +171,6 @@
     		return this.each(function() {
     		  /* Check if HTML5 audio tag is supported. */
               if(typeof Audio=='function' || typeof Audio=='object'){
-              /* HTML5 audio tag supported. */
-              var current_index = 0,
-              audio_sources = '',
-              player_state = '';
-              
-              /* Shuffle the playlist if shuffle is selected */
-              if(option.shuffle){
-                songs.sort(function() { return 0.5 - Math.random() });                
-              }
-              
-              /* Inject the new player HTML. */
-               obj.replaceWith(generate_player_html() + generate_player_html('audio'));
-               
-               /* jQuery doesn't recognize HTML5 audio methods, so we have to reference the DOM object also. */
-               var audio_player_dom = document.getElementById('' + option.player_id + '_audio'),
-               audio_player = $('#' + option.player_id + '_audio'),
-               /* Server must support partial data delivery for seek. */
-               isSeekable = audio_player_dom.seekable && audio_player_dom.seekable.length > 0;
-                 
-               /* Set the progress bar. */
-               progressbar_init();
-               
-               /* Setup the volume control. */
-               volumebar_init();
-               
-               /* Set the initial volume. */
-               set_volume(option.volume);
-               
-                /* Add event listeners for the audio object */
-               add_player_listeners();              
-               
-               /* Set the mouse events for all buttons. */
-               set_mouse_events();
-               
-               /* Insert icons in the sliders handles. */
-               add_slider_handle_icons();
-               
-               /* Add custom classes and cursor styles. */
-               set_player_styles();
-               
-               /* Check options for which objects to hide. */
-               check_visibility_options(); 
-               
-               /* Everything is loaded - show the player. */
-               $('.' + option.player_id + '-wrapper').show(option.show_effect, option.effect_options, option.show_duration, option.is_loaded);
-                
-               /* Start playing if auto_start is selected. */
-               if(option.auto_start){
-                $('.' + option.player_id + '-playpausebutton').trigger('click');
-               }
               
               /* Set the player state, update play icon data */
               function set_player_state(state){
@@ -558,7 +508,58 @@
                     /* Set the cursor style. */
                      $('.ui-slider-handle, .' + option.player_id + '-button').css({'cursor':'pointer'});
                 }
+              
+              /* HTML5 audio tag supported. */
+              var current_index = 0,
+              audio_sources = '',
+              player_state = '';
+              
+              /* Shuffle the playlist if shuffle is selected */
+              if(option.shuffle){
+                songs.sort(function() { return 0.5 - Math.random() });                
+              }
+              
+              /* Inject the new player HTML. */
+               obj.replaceWith(generate_player_html() + generate_player_html('audio'));
+               
+               /* jQuery doesn't recognize HTML5 audio methods, so we have to reference the DOM object also. */
+               var audio_player_dom = document.getElementById('' + option.player_id + '_audio'),
+               audio_player = $('#' + option.player_id + '_audio'),
+               /* Server must support partial data delivery for seek. */
+               isSeekable = audio_player_dom.seekable && audio_player_dom.seekable.length > 0;
+                 
+               /* Set the progress bar. */
+               progressbar_init();
+               
+               /* Setup the volume control. */
+               volumebar_init();
+               
+               /* Set the initial volume. */
+               set_volume(option.volume);
+               
+                /* Add event listeners for the audio object */
+               add_player_listeners();              
+               
+               /* Set the mouse events for all buttons. */
+               set_mouse_events();
+               
+               /* Insert icons in the sliders handles. */
+               add_slider_handle_icons();
+               
+               /* Add custom classes and cursor styles. */
+               set_player_styles();
+               
+               /* Check options for which objects to hide. */
+               check_visibility_options(); 
+               
+               /* Everything is loaded - show the player. */
+               $('.' + option.player_id + '-wrapper').show(option.show_effect, option.effect_options, option.show_duration, option.is_loaded);
                 
+               /* Start playing if auto_start is selected. */
+               if(option.auto_start){
+                $('.' + option.player_id + '-playpausebutton').trigger('click');
+               }
+                             
               } else {
                 /* HTML5 audio tag not supported. We better get outta here! */
                 return;
